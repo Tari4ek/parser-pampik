@@ -67,7 +67,8 @@ class Pampik
                                         $this->products[] = $this->getOneProduct($resultCategoryHtml['message']);
                                         $this->products = [];
                                         echo '<pre>';
-                                        print_r($this->products); exit;
+                                        print_r($this->products);
+                                        exit;
                                     }
                                 }
                             }
