@@ -51,6 +51,7 @@ class Pampik
 
             if ($resultCategoryHtml['code'] == '200') {
                 $pages = $this->Pagination($resultCategoryHtml['message']);
+
                 if (count($pages)) {
                     foreach ($pages as $key => $pageUrl) {
                         $resultCategoryHtml = $this->grabber->getHtmlFromUrl($pageUrl);
@@ -61,9 +62,12 @@ class Pampik
                             if (count($productUrls)) {
                                 foreach ($productUrls as $key => $productUrl) {
                                     $resultCategoryHtml = $this->grabber->getHtmlFromUrl($productUrl);
+
                                     if ($resultCategoryHtml['code'] == '200') {
                                         $this->products[] = $this->getOneProduct($resultCategoryHtml['message']);
                                         $this->products = [];
+                                        echo '<pre>';
+                                        print_r($this->products); exit;
                                     }
                                 }
                             }
@@ -142,13 +146,17 @@ class Pampik
 
     }
 
+    /**
+     * @param $html
+     * @return array
+     */
     public function Pagination($html)
     {
         $dom = HtmlDomParser::str_get_html($html);
         $categoryUrl = $dom->find('link[rel=canonical]', 0)->href;
         $paginationUrl = [];
-        foreach ($dom->find('.pagination__page') as $paginationPages) {
-            $pageCount = $paginationPages->getAttribute('data-page');
+        foreach ($dom->find('.pagination__page ') as $paginationPages) {
+            $pageCount = $paginationPages->find('a', 0)->getAttribute('data-page');
         }
         if ($pageCount) {
             for ($i = 1; $i <= $pageCount; $i++) {
@@ -156,9 +164,6 @@ class Pampik
             }
         }
 
-        echo '<pre>';
-        print_r($paginationUrl);
-        exit;
 
         return $paginationUrl;
     }
