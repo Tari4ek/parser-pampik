@@ -12,7 +12,6 @@ try {
     $pampik = new Pampik();
     $pampik->setCatagories(['https://pampik.com/category/dla-malcikov']);
     $pampik->purse();
-    $pampik->Pagination('https://pampik.com/category/dla-malcikov');
 
 
 } catch (Exception $e) {

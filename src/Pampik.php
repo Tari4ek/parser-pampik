@@ -68,7 +68,7 @@ class Pampik
                                         $this->products = [];
                                         echo '<pre>';
                                         print_r($this->products);
-                                        exit;
+
                                     }
                                 }
                             }
@@ -99,6 +99,10 @@ class Pampik
         return $urls;
     }
 
+    /**
+     * @param $html
+     * @return array
+     */
     public function getOneProduct($html)
     {
         $dom = HtmlDomParser::str_get_html($html);
@@ -119,6 +123,10 @@ class Pampik
 
     }
 
+    /**
+     * @param $html
+     * @return array
+     */
     public function getImg($html)
     {
 
@@ -131,6 +139,10 @@ class Pampik
         return $img;
     }
 
+    /**
+     * @param $html
+     * @return array
+     */
     public function getDescription($html)
     {
         $dom = HtmlDomParser::str_get_html($html);
