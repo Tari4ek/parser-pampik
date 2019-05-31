@@ -11,7 +11,8 @@ try {
     $_SERVER['DOCUMENT_ROOT'] = dirname(__FILE__);
     $pampik = new Pampik();
     $pampik->setCatagories(['https://pampik.com/category/dla-malcikov']);
-    $result = $pampik->purse();
+    $pampik->purse();
+    $pampik->Pagination('https://pampik.com/category/dla-malcikov');
 
 
 } catch (Exception $e) {
