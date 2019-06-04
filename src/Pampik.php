@@ -12,6 +12,7 @@ class Pampik
     private $grabber;
     private $products = [];
     private $catagories = [];
+    public $filename = 'test.txt';
 
 
     public function __construct()
@@ -44,7 +45,7 @@ class Pampik
     /**
      * @return array
      */
-    public function purse()
+    public function parse()
     {
         foreach ($this->catagories as $url) {
             $resultCategoryHtml = $this->grabber->getHtmlFromUrl($url);
@@ -65,9 +66,9 @@ class Pampik
 
                                     if ($resultCategoryHtml['code'] == '200') {
                                         $this->products[] = $this->getOneProduct($resultCategoryHtml['message']);
+                                        $this->write();
                                         $this->products = [];
-                                        echo '<pre>';
-                                        print_r($this->products);
+                                        exit;
 
                                     }
                                 }
@@ -108,7 +109,7 @@ class Pampik
         $dom = HtmlDomParser::str_get_html($html);
 
         $addImages = $this->getImg($html);
-        $description = $this->getDescription($html);
+        $description[] = $this->getDescription($html);
 
 
         $product = [
@@ -134,7 +135,7 @@ class Pampik
 
         $img = [];
         foreach ($dom->find('.popup-main-slider__item .popup-main-slider__img') as $imgBox) {
-            $img[] = $imgBox->getAttribute('src');
+            $img[] = 'https://pampik.com' . $imgBox->getAttribute('data-src');
         }
         return $img;
     }
@@ -148,10 +149,10 @@ class Pampik
         $dom = HtmlDomParser::str_get_html($html);
         $description = [];
         foreach ($dom->find('.product-tab') as $product) {
-            $description[] = $product->find('.description__title')->plaintext;
+
             $item = [];
             $item['name'] = $product->find('.description__title', 0)->plaintext;
-            $item['value'] = $product->find('description__text', 0)->plaintext;
+            $item['value'] = $product->find('.description__text', 0)->plaintext;
 
             $description[] = $item;
         }
@@ -179,6 +180,32 @@ class Pampik
 
 
         return $paginationUrl;
+    }
+
+    public function write()
+    {
+        $str_value = serialize($this->products);
+
+        if (is_writable($this->filename)) {
+
+            if (!$handle = fopen($this->filename, 'a')) {
+                echo "Не могу открыть файл ($this->filename)";
+                exit;
+            }
+
+            if (fwrite($handle, $str_value) === FALSE) {
+                echo "Не могу произвести запись в файл ($this->filename)";
+                exit;
+            }
+
+            echo "Записали  в файл ($this->filename)";
+
+            fclose($handle);
+
+        } else {
+            echo "Файл $this->filename недоступен для записи";
+        }
+
     }
 
 
