@@ -13,11 +13,7 @@ class Pampik
     private $products = [];
     private $catagories = [];
     public $filename = 'test.txt';
-
-    private $path = '';
-    public $data;
-
-
+    
     public function __construct()
     {
         $this->grabber = new Grabber();
