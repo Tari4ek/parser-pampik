@@ -14,6 +14,9 @@ class Pampik
     private $catagories = [];
     public $filename = 'test.txt';
 
+    private $path = '';
+    public $data;
+
 
     public function __construct()
     {
@@ -69,7 +72,6 @@ class Pampik
                                         $this->write();
                                         $this->products = [];
                                         exit;
-
                                     }
                                 }
                             }
@@ -109,7 +111,7 @@ class Pampik
         $dom = HtmlDomParser::str_get_html($html);
 
         $addImages = $this->getImg($html);
-        $description[] = $this->getDescription($html);
+        $specifications[] = $this->getSpecifications($html);
 
 
         $product = [
@@ -117,7 +119,7 @@ class Pampik
             'title' => $dom->find('.page-title', 0)->plaintext,
             'price' => $dom->find('.product-info__price-current', 0)->plaintext,
             'articul' => $dom->find('.product__art', 0)->plaintext,
-            'description' => $description,
+            'description' => $specifications,
         ];
 
         return $product;
@@ -144,15 +146,16 @@ class Pampik
      * @param $html
      * @return array
      */
-    public function getDescription($html)
+    public function getSpecifications($html)
     {
         $dom = HtmlDomParser::str_get_html($html);
         $description = [];
-        foreach ($dom->find('.product-tab') as $product) {
+
+        foreach ($dom->find('.specifications__list .specifications__list-item') as $product) {
 
             $item = [];
-            $item['name'] = $product->find('.description__title', 0)->plaintext;
-            $item['value'] = $product->find('.description__text', 0)->plaintext;
+            $item['name'] = $product->find('.specifications-desc', 0)->plaintext;
+            $item['value'] = $product->find('.specifications-val', 0)->plaintext;
 
             $description[] = $item;
         }
@@ -205,8 +208,6 @@ class Pampik
         } else {
             echo "Файл $this->filename недоступен для записи";
         }
-
     }
-
 
 }
